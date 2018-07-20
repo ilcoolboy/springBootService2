@@ -5,8 +5,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
@@ -18,7 +21,9 @@ import com.wzg.mq.Produce;
 
 @Service
 @SuppressWarnings("unchecked")
+@Transactional
 public class FindService implements IFindService {
+	private static final Logger log = LoggerFactory.getLogger(FindService.class);
 	@Resource
 	private IBankDao bankDao;
 	@Autowired
@@ -45,12 +50,13 @@ public class FindService implements IFindService {
 	public void addData(Bank bank) {
 		//状态0位中间状态  1为分布式事务已经成功
 		bank.setState("00000000");
-		int totle = this.bankDao.addBank(bank);
-		System.out.println(bank.getGid());
+		this.bankDao.addBank(bank);
 		String json = gson.toJson(bank);
 		produce.sendMsg("bank1", json);
 //		produce.sendMsg("bank2", json);
-		System.out.println("end---------");
+		if (log.isInfoEnabled()) {
+			log.info("end----");
+		}
 	}
 
 	@Override
@@ -66,6 +72,20 @@ public class FindService implements IFindService {
 			bank.setState("00000001");
 			bankDao.updateByPrimaryKey(bank);
 		}
+	}
+
+
+	@Override
+	public void afterAddError(String msg) {
+		if (log.isDebugEnabled()) {
+			log.debug(msg);
+		}
+		Bank bank = gson.fromJson(msg, Bank.class);
+		String gid = bank.getGid();
+		Integer deleteTotle = this.bankDao.deleteByPrimaryKey(gid);
+		
+		log.debug("回滚记录数:" + deleteTotle);
+		log.debug("回滚记录gid:" + gid);
 	}
 
 }
