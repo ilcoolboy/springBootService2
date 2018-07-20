@@ -13,9 +13,19 @@ public interface IFindService {
 	Map findAll();
 
 	Map findAllByJDBC();
-	
+	/**
+	 * 新增数据
+	 * @param bank
+	 */
 	void addData(Bank bank);
-	
+	/**
+	 * 新增成功之后
+	 * @param msg
+	 */
 	void afterAddData(String msg);
-	
+	/**
+	 * 新增失败之后
+	 * @param msg
+	 */
+	void afterAddError(String msg);
 }

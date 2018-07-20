@@ -56,11 +56,12 @@
             </if>
         </trim>
     </insert>
-    <!--  
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-        delete from user_t
-        where id = #{id,jdbcType=INTEGER}
+    
+    <delete id="deleteByPrimaryKey" parameterType="String" >
+        delete from Bank
+        where gid = #{gid,jdbcType=VARCHAR}
     </delete>
+    <!--  
     <insert id="insert" parameterType="com.xdd.entity.User" >
         insert into user_t (id, user_name, password,
         age)

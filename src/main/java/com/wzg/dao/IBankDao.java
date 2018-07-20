@@ -8,4 +8,5 @@ public interface IBankDao {
 	List<Bank> selectAll();
 	Integer addBank(Bank bank);
 	Integer updateByPrimaryKey(Bank bank);
+	Integer deleteByPrimaryKey(String gid);
 }
