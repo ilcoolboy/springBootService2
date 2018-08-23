@@ -12,7 +12,11 @@ import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
-
+/**
+ * 消息生产者 .
+ * @author wuzhigang
+ *
+ */
 @Component
 public class Produce {
 	@Autowired
@@ -28,6 +32,7 @@ public class Produce {
 		jmsTemplate.setSessionTransacted(true);
 		// 消息应答模式为事务   （当消息为支持事务的时候 应答模型设置为其他的都无效 系统都认为应答模式为事务模式）
 		jmsTemplate.setSessionAcknowledgeMode(Session.SESSION_TRANSACTED);
+		
 		jmsTemplate.send(destination, new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {

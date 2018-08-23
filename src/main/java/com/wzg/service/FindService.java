@@ -5,14 +5,15 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.aspectj.asm.IProgramElement.Accessibility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.wzg.dao.IBankDao;
 import com.wzg.dao.IJdbcBankDao;
 import com.wzg.entity.Bank;
@@ -23,6 +24,7 @@ import com.wzg.mq.Produce;
 @SuppressWarnings("unchecked")
 @Transactional
 public class FindService implements IFindService {
+
 	private static final Logger log = LoggerFactory.getLogger(FindService.class);
 	@Resource
 	private IBankDao bankDao;
@@ -51,15 +53,18 @@ public class FindService implements IFindService {
 		//状态0位中间状态  1为分布式事务已经成功
 		bank.setState("00000000");
 		this.bankDao.addBank(bank);
+		
 		String json = gson.toJson(bank);
 		produce.sendMsg("bank1", json);
 //		produce.sendMsg("bank2", json);
 		if (log.isInfoEnabled()) {
 			log.info("end----");
 		}
+	
 	}
 
 	@Override
+	@Transactional
 	public void afterAddData(String json) {
 		Map msg = gson.fromJson(json, Map.class);
 		if (msg != null && msg.get("success")!= null && Boolean.valueOf(String.valueOf(msg.get("success")))){
