@@ -47,7 +47,12 @@ DLQ-死信队列(Dead Letter Queue)用来保存处理失败或者过期的消息
 缺省持久消息过期，会被送到DLQ，非持久消息不会送到DLQ
 
 ####什么是应答机制（ack机制）：
-ABC
+
+ack机制ACKNOWLEDGE 是消费者和MQ之间的消息确认机制，即消息确认之后，MQ服务器才会把此条消息删除。
+ACK主要的取值有
+* 1 AUTO_ACKNOWLEDGE = 1    自动确认,消费者接收到消息就确认次消息，不管消息是否成功消费。
+* 2 CLIENT_ACKNOWLEDGE = 2    客户端手动确认, 消费者调用javax.jms.Message的acknowledge方法确认消息。
+* 3 SESSION_TRANSACTED = 0  事务提交才确认消息，本demo用的是这个处理分布式事务。
 
 ####修改默认的死信队列配置方法：
 activeMQ 提供了设置死信队列的配置 找到activeMQ的配置文件， 路径  apache-activemq-5.15.3/conf/activemq.xml  打开修改activemq.xml 找到destinationPolicy 在policyEntries下加入以下配置） 
