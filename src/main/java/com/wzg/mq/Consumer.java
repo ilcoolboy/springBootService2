@@ -25,6 +25,7 @@ public class Consumer {
 	 * @param message
 	 * @param session
 	 */
+
 	@JmsListener(destination= "bank1.back", containerFactory="jmsListenerContainer")
 	public void onMsg(Message message, Session session) {
 		TextMessage textMsg = (TextMessage) message;

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
-
 import org.aspectj.asm.IProgramElement.Accessibility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ import com.wzg.mq.Produce;
 @SuppressWarnings("unchecked")
 @Transactional
 public class FindService implements IFindService {
-
 	private static final Logger log = LoggerFactory.getLogger(FindService.class);
 	@Resource
 	private IBankDao bankDao;
@@ -53,14 +51,13 @@ public class FindService implements IFindService {
 		//状态0位中间状态  1为分布式事务已经成功
 		bank.setState("00000000");
 		this.bankDao.addBank(bank);
-		
 		String json = gson.toJson(bank);
 		produce.sendMsg("bank1", json);
 //		produce.sendMsg("bank2", json);
 		if (log.isInfoEnabled()) {
 			log.info("end----");
 		}
-	
+
 	}
 
 	@Override
