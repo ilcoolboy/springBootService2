@@ -39,9 +39,9 @@
 ####什么是死信队列：
 DLQ-死信队列(Dead Letter Queue)用来保存处理失败或者过期的消息。
 出现以下情况时，消息会被redelivered
- A transacted session is used and rollback() is called.
- A transacted session is closed before commit is called.
- A session is using CLIENT_ACKNOWLEDGE and Session.recover() is called.
+* A transacted session is used and rollback() is called.
+* A transacted session is closed before commit is called.
+* A session is using CLIENT_ACKNOWLEDGE and Session.recover() is called.
 当一个消息被redelivered超过maximumRedeliveries(缺省为6次，具体设置请参考后面的链接)次数时，会给broker发送一个"Poison ack"，这个消息被认为是a poison pill，这时broker会将这个消息发送到DLQ，以便后续处理。
 缺省的死信队列是ActiveMQ.DLQ，如果没有特别指定，死信都会被发送到这个队列。
 缺省持久消息过期，会被送到DLQ，非持久消息不会送到DLQ
